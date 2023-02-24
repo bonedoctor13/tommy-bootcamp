@@ -54,13 +54,15 @@ const Video = () => {
         const detections = await faceapi.detectAllFaces(
           video,
           new faceapi.TinyFaceDetectorOptions()
-        ).withFaceLandmarks().withFaceExpressions()
+        ).withFaceLandmarks().withFaceExpressions();
 
         console.log('detectAndRender after detections')
         
         const resizedResults = faceapi.resizeResults(detections, videoSize)
         canvas.getContext('2d')?.clearRect(0, 0, canvas.width, canvas.height);
         faceapi.draw.drawDetections(canvas, resizedResults)
+        const minProbability = 0.05;
+        faceapi.draw.drawFaceExpressions(canvas, resizedResults, minProbability);
       }
 
       setInterval(detectAndRender, 200)
