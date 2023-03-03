@@ -14,6 +14,18 @@
 }
 
 .App-header {
+  font-family: "Comic Sans MS";
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(40px + 8vmin);
+  color: white;
+}
+
+.App-body {
   background-color: #282c34;
   min-height: 100vh;
   display: flex;
