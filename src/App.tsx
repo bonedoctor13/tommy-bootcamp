@@ -1,13 +1,15 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
+import './tictactoe'
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
-        <p><marquee>Johnny</marquee></p>
+        <p>Johnny</p>
+        {/* <p><marquee>Johnny</marquee></p> */}
       </header>
       <header className="App-body">
         <dl><dt>CSS (Cascading Style Sheets)</dt><dd>a style sheet language used for describing the look and formatting of a document written in markup language</dd></dl>
