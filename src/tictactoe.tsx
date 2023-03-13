@@ -101,25 +101,27 @@ const move2:Move = { x: 2, y: 0 }
 export const state3 = makeMove(state2, move)
 logGamestate(state3)
 
-type JSXElementForGameState = (gameState: GameState) => JSXElement
+type SetGameState = (gs:GameState) => void
 
-const jsxElementForSquare = (square:Square):JSXElement => (
+type JSXElementForGameState = (gameState: GameState, setGameState:SetGameState) => JSXElement
+
+const jsxElementForSquare = (square:Square, y:number, x:number, setGameState:SetGameState, gs:GameState):JSXElement => (
     <>
-        { square == _ ? <button onClick={alert}>_</button> : square }
+        { square == _ ? <button onClick={() => setGameState(makeMove(gs, {x, y}))}>_</button> : square }
     </>
 )
 
-const jsxElementForRow = (row:Row):JSXElement => (
+const jsxElementForRow = (row:Row, y:number, setGameState:SetGameState, gs:GameState):JSXElement => (
     <>
-        {row.map(square => <td>{jsxElementForSquare(square)}</td>)}
+        {row.map((square, x) => <td>{jsxElementForSquare(square, y, x, setGameState, gs)}</td>)}
     </>
 )
 
-export const jsxElementForGameState:JSXElementForGameState = gs => (
+export const jsxElementForGameState:JSXElementForGameState = (gs, setGameState) => (
     <>
         <table>
             {
-                rows(gs.board).map(row => <tr>{jsxElementForRow(row)}</tr>)
+                rows(gs.board).map((row, y) => <tr>{jsxElementForRow(row, y, setGameState, gs)}</tr>)
             }
         </table>
         <br></br>

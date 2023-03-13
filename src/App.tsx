@@ -6,8 +6,8 @@ import { getSpaceUntilMaxLength } from '@testing-library/user-event/dist/utils';
 import { initialState, jsxElementForGameState, state3 } from './tictactoe';
 
 function App() {
-  // const [gameState, setGameState] = useState(initialState)
-  const gameJSXElement = jsxElementForGameState(initialState)
+  const [gameState, setGameState] = useState(initialState)
+  const gameJSXElement = jsxElementForGameState(gameState, setGameState)
   return (
     <div className="App">
       <header className="App-body">
