@@ -16,6 +16,7 @@ type GameState = {
     board: Board,
     player: Player,
     errorMessage?:string,
+    winner?:Player
 }
 
 const switchPlayer:SwitchPlayer = (p) => p == "X" ? "O" : "X"
@@ -44,11 +45,24 @@ const makeMove: MakeMove = (gs, move) => {
     } else {
         const mapSquare = (square:Square, squareIndex:number):Square => squareIndex == move.x ? gs.player : square
         const mapRow = (row:Row, rowIndex:number):Row => rowIndex == move.y ? row.map(mapSquare) : row
-        return {
+        const newGameState = {
             board: gs.board.map(mapRow),
             player: switchPlayer(gs.player),
             errorMessage: undefined,
         }
+        if(hasXWon(newGameState.board))
+            return {
+                board: newGameState.board,
+                player: switchPlayer(gs.player),
+                winner: x
+            }
+        if(hasOWon(newGameState.board))
+            return {
+                board: newGameState.board,
+                player: switchPlayer(gs.player),
+                winner: o
+            }
+        return newGameState
     }
 }
 
@@ -56,7 +70,8 @@ const throwNotImplemented = () => { throw new Error("Not Implemented")  }
 const rows = (b:Board):Array<Row> => b
 const columns = (b:Board):Array<Column> => throwNotImplemented()
 const diagonals = (b:Board):Array<Line> => throwNotImplemented()
-const winLines = (b:Board):Array<Line> => [...diagonals(b), ...columns(b), ...rows(b)]
+// const winLines = (b:Board):Array<Line> => [...diagonals(b), ...columns(b), ...rows(b)]
+const winLines = (b:Board):Array<Line> => [...rows(b)]
 
 type Predicate<T> = (t:T) => boolean
 
@@ -80,7 +95,6 @@ const hasPlayerWon = (playerPredicate:Predicate<Square>) =>
 
 const hasXWon = hasPlayerWon(isX)
 const hasOWon = hasPlayerWon(isO)
-
 
 // View Logic Below
 
@@ -125,7 +139,11 @@ export const jsxElementForGameState:JSXElementForGameState = (gs, setGameState) 
             }
         </table>
         <br></br>
+        {gs.winner ? <div>winner {gs.winner}</div> : null}
         {gs.errorMessage ? <div>Error {gs.errorMessage}</div> : null}
         <div> Current Player: {gs.player}</div>
     </>
 )
+
+// make 3 if statements, 1 for the win for X, 1 for the win for O, a tie, and stopping the game
+// store makemove value, then compare for x win, o win. can find out how to show tie later.
