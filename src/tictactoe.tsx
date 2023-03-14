@@ -16,7 +16,7 @@ type GameState = {
     board: Board,
     player: Player,
     errorMessage?:string,
-    winner?:Player
+    winner?:Player,
 }
 
 const switchPlayer:SwitchPlayer = (p) => p == "X" ? "O" : "X"
@@ -52,14 +52,12 @@ const makeMove: MakeMove = (gs, move) => {
         }
         if(hasXWon(newGameState.board))
             return {
-                board: newGameState.board,
-                player: switchPlayer(gs.player),
+                ...newGameState,
                 winner: x
             }
         if(hasOWon(newGameState.board))
             return {
-                board: newGameState.board,
-                player: switchPlayer(gs.player),
+                ...newGameState,
                 winner: o
             }
         return newGameState
@@ -68,10 +66,17 @@ const makeMove: MakeMove = (gs, move) => {
 
 const throwNotImplemented = () => { throw new Error("Not Implemented")  }
 const rows = (b:Board):Array<Row> => b
-const columns = (b:Board):Array<Column> => throwNotImplemented()
-const diagonals = (b:Board):Array<Line> => throwNotImplemented()
-// const winLines = (b:Board):Array<Line> => [...diagonals(b), ...columns(b), ...rows(b)]
-const winLines = (b:Board):Array<Line> => [...rows(b)]
+const columns = (b:Board):Array<Column> => [
+    [getSquare(b, 0, 0), getSquare(b, 0, 1), getSquare(b, 0, 2)], 
+    [getSquare(b, 1, 0), getSquare(b, 1, 1), getSquare(b, 1, 2)], 
+    [getSquare(b, 2, 0), getSquare(b, 2, 1), getSquare(b, 2, 2)],
+]
+const diagonals = (b:Board):Array<Line> => [
+    [getSquare(b, 0, 0), getSquare(b, 1, 1), getSquare(b, 2, 2)],
+    [getSquare(b, 0, 2), getSquare(b, 1, 1), getSquare(b, 2, 0)],
+]
+const winLines = (b:Board):Array<Line> => [...diagonals(b), ...columns(b), ...rows(b)]
+// const winLines = (b:Board):Array<Line> => [...rows(b)]
 
 type Predicate<T> = (t:T) => boolean
 
@@ -142,6 +147,7 @@ export const jsxElementForGameState:JSXElementForGameState = (gs, setGameState) 
         {gs.winner ? <div>winner {gs.winner}</div> : null}
         {gs.errorMessage ? <div>Error {gs.errorMessage}</div> : null}
         <div> Current Player: {gs.player}</div>
+        <button onClick = {() => setGameState(initialState)}>RESET BOARD</button>
     </>
 )
 
